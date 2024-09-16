@@ -1,70 +1,158 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// Define colors
+const COLORS = {
+  primary: "#FF6B35", // Vibrant Orange
+  secondary: "#004E89", // Deep Blue
+  accent: "#00A896", // Teal
+  background: "#EFEFEF", // Light Gray
+  textDark: "#333333", // Dark Gray
+  textLight: "#FFFFFF", // White
+};
+
+// Dummy data for events
+const allEvents = [
+  {
+    id: "1",
+    title: "Soccer Game",
+    date: "2024-09-20",
+    time: "18:00",
+    location: "Central Park",
+    category: "Soccer",
+  },
+  {
+    id: "2",
+    title: "Basketball Meetup",
+    date: "2024-09-22",
+    time: "15:00",
+    location: "City Gym",
+    category: "Basketball",
+  },
+  {
+    id: "3",
+    title: "Tennis Match",
+    date: "2024-09-25",
+    time: "10:00",
+    location: "Community Courts",
+    category: "Tennis",
+  },
+  {
+    id: "4",
+    title: "Volleyball Tournament",
+    date: "2024-09-28",
+    time: "14:00",
+    location: "Beach Arena",
+    category: "Volleyball",
+  },
+  {
+    id: "5",
+    title: "Running Club",
+    date: "2024-09-30",
+    time: "07:00",
+    location: "City Park",
+    category: "Running",
+  },
+];
 
 export default function HomeScreen() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [events, setEvents] = useState(allEvents);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    const filteredEvents = allEvents.filter(
+      (event) =>
+        event.title.toLowerCase().includes(query.toLowerCase()) ||
+        event.category.toLowerCase().includes(query.toLowerCase()),
+    );
+    setEvents(filteredEvents);
+  };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.eventCard}>
+      <Text style={styles.eventTitle}>{item.title}</Text>
+      <Text style={styles.eventCategory}>{item.category}</Text>
+      <Text style={styles.eventDetails}>
+        {item.date} at {item.time}
+      </Text>
+      <Text style={styles.eventDetails}>{item.location}</Text>
+    </TouchableOpacity>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Upcoming Events</Text>
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search events or categories"
+        value={searchQuery}
+        onChangeText={handleSearch}
+      />
+      <FlatList
+        data={events}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContainer}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    padding: 15,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: COLORS.secondary,
+    marginBottom: 15,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  searchBar: {
+    backgroundColor: COLORS.textLight,
+    padding: 10,
+    borderRadius: 25,
+    marginBottom: 15,
+    fontSize: 16,
+    borderColor: COLORS.primary,
+    borderWidth: 1,
+  },
+  listContainer: {
+    paddingBottom: 20,
+  },
+  eventCard: {
+    backgroundColor: COLORS.textLight,
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 15,
+    borderColor: COLORS.primary,
+    borderWidth: 1,
+  },
+  eventTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: COLORS.secondary,
+    marginBottom: 5,
+  },
+  eventCategory: {
+    fontSize: 16,
+    color: COLORS.accent,
+    marginBottom: 5,
+    fontWeight: "bold",
+  },
+  eventDetails: {
+    fontSize: 14,
+    color: COLORS.textDark,
+    marginBottom: 2,
   },
 });
