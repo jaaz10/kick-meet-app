@@ -3,112 +3,126 @@ import {
   View,
   Text,
   StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  Image,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-
-// Define colors
-const COLORS = {
-  primary: "#FF6B35", // Vibrant Orange
-  secondary: "#004E89", // Deep Blue
-  accent: "#00A896", // Teal
-  background: "#EFEFEF", // Light Gray
-  textDark: "#333333", // Dark Gray
-  textLight: "#FFFFFF", // White
-};
+import Header from "../../components/Header";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ProfileScreen() {
-  // Dummy user data
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    eventsCreated: 5,
-    eventsAttended: 12,
-  };
-
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.profileHeader}>
-        <Text style={styles.profileName}>{user.name}</Text>
-        <Text style={styles.profileEmail}>{user.email}</Text>
-      </View>
-
-      <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{user.eventsCreated}</Text>
-          <Text style={styles.statLabel}>Events Created</Text>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <Header showSearch={false} />
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.profileHeader}>
+          <Image
+            style={styles.profileImage}
+            source={{ uri: "https://via.placeholder.com/150" }}
+          />
+          <Text style={styles.userName}>John Doe</Text>
+          <Text style={styles.userBio}>
+            Soccer enthusiast | Midfielder | Love the game!
+          </Text>
         </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{user.eventsAttended}</Text>
-          <Text style={styles.statLabel}>Events Attended</Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>42</Text>
+            <Text style={styles.statLabel}>Posts</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>1.5k</Text>
+            <Text style={styles.statLabel}>Followers</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>356</Text>
+            <Text style={styles.statLabel}>Following</Text>
+          </View>
         </View>
-      </View>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Edit Profile</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>My Events</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Settings</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity style={styles.editProfileButton}>
+          <Text style={styles.editProfileButtonText}>Edit Profile</Text>
+        </TouchableOpacity>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Recent Activity</Text>
+          {/* Add recent activity items here */}
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Favorite Teams</Text>
+          {/* Add favorite teams here */}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: "#18181B",
+  },
+  content: {
+    padding: 20,
   },
   profileHeader: {
-    backgroundColor: COLORS.secondary,
-    padding: 20,
     alignItems: "center",
+    marginBottom: 20,
   },
-  profileName: {
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 10,
+  },
+  userName: {
+    color: "#FFFFFF",
     fontSize: 24,
     fontWeight: "bold",
-    color: COLORS.textLight,
     marginBottom: 5,
   },
-  profileEmail: {
+  userBio: {
+    color: "#A1A1AA",
     fontSize: 16,
-    color: COLORS.textLight,
+    textAlign: "center",
   },
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    padding: 20,
-    backgroundColor: COLORS.textLight,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.accent,
+    marginBottom: 20,
   },
   statItem: {
     alignItems: "center",
   },
   statNumber: {
-    fontSize: 24,
+    color: "#FFFFFF",
+    fontSize: 20,
     fontWeight: "bold",
-    color: COLORS.primary,
   },
   statLabel: {
+    color: "#A1A1AA",
     fontSize: 14,
-    color: COLORS.textDark,
   },
-  button: {
-    backgroundColor: COLORS.primary,
+  editProfileButton: {
+    backgroundColor: "#FF4500",
     padding: 15,
-    margin: 15,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: "center",
+    marginBottom: 20,
   },
-  buttonText: {
-    color: COLORS.textLight,
+  editProfileButtonText: {
+    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });
