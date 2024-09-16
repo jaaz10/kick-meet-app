@@ -7,122 +7,97 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  TextInput,
   ScrollView,
-  Image,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 
 type Post = {
   id: string;
+  type: "game" | "news";
   title: string;
   author: string;
   upvotes: number;
   comments: number;
   time: string;
-  subreddit: string;
+  venue: string;
 };
 
-type Subreddit = {
+type Venue = {
   id: string;
   name: string;
-  members: number;
-  description: string;
-  image: string;
+  address: string;
+  rating: number;
 };
 
-const dummySubreddits: Subreddit[] = [
+const dummyVenues: Venue[] = [
   {
     id: "1",
-    name: "MillenniumPark",
-    members: 50000,
-    description: "All about Chicago's famous Millennium Park",
-    image: "https://example.com/millennium_park.jpg",
+    name: "Central Park",
+    address: "1234 Park Ave, City",
+    rating: 4.5,
   },
   {
     id: "2",
-    name: "LincolnParkZoo",
-    members: 35000,
-    description: "Updates and discussions about Lincoln Park Zoo",
-    image: "https://example.com/lincoln_park_zoo.jpg",
+    name: "Riverside Fields",
+    address: "5678 River Rd, City",
+    rating: 4.2,
   },
   {
     id: "3",
-    name: "GrantPark",
-    members: 30000,
-    description: "Events and news from Grant Park",
-    image: "https://example.com/grant_park.jpg",
+    name: "Community Soccer Complex",
+    address: "910 Main St, City",
+    rating: 4.8,
   },
 ];
 
 const dummyData: Post[] = [
   {
     id: "1",
-    title: "New art installation at The Bean",
-    author: "artLover",
+    type: "game",
+    title: "Pickup game at Central Park - Need 3 players",
+    author: "soccerFan123",
     upvotes: 15,
     comments: 3,
     time: "2h ago",
-    subreddit: "MillenniumPark",
+    venue: "Central Park",
   },
   {
     id: "2",
-    title: "Upcoming events at Pritzker Pavilion",
-    author: "musicFan",
-    upvotes: 7,
-    comments: 1,
+    type: "news",
+    title: "Local team wins regional championship",
+    author: "sportsnews",
+    upvotes: 42,
+    comments: 7,
     time: "4h ago",
-    subreddit: "MillenniumPark",
+    venue: "",
   },
   {
     id: "3",
-    title: "New lion cubs born at Lincoln Park Zoo",
-    author: "zooEnthusiast",
-    upvotes: 22,
+    type: "game",
+    title: "Women's league game this Saturday",
+    author: "leagueOrganizer",
+    upvotes: 28,
     comments: 5,
     time: "6h ago",
-    subreddit: "LincolnParkZoo",
+    venue: "Riverside Fields",
   },
   {
     id: "4",
-    title: "Photos from the annual ZooLights event",
-    author: "nightPhotographer",
-    upvotes: 9,
+    type: "news",
+    title: "New turf installed at Community Soccer Complex",
+    author: "cityUpdates",
+    upvotes: 33,
     comments: 2,
     time: "8h ago",
-    subreddit: "LincolnParkZoo",
-  },
-  {
-    id: "5",
-    title: "Taste of Chicago returning to Grant Park",
-    author: "foodieExplorer",
-    upvotes: 18,
-    comments: 4,
-    time: "10h ago",
-    subreddit: "GrantPark",
+    venue: "Community Soccer Complex",
   },
 ];
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState<Post[]>(dummyData);
-  const [subreddits] = useState<Subreddit[]>(dummySubreddits);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (text: string) => {
-    setSearchQuery(text);
-    if (text) {
-      const filteredPosts = dummyData.filter(
-        (post) =>
-          post.title.toLowerCase().includes(text.toLowerCase()) ||
-          post.author.toLowerCase().includes(text.toLowerCase()) ||
-          post.subreddit.toLowerCase().includes(text.toLowerCase()),
-      );
-      setPosts(filteredPosts);
-    } else {
-      setPosts(dummyData);
-    }
-  };
+  const [venues] = useState<Venue[]>(dummyVenues);
 
   const handleVote = (id: string, increment: number) => {
     setPosts(
@@ -134,27 +109,56 @@ export default function HomeScreen() {
     );
   };
 
-  const renderSubreddit = ({ item }: { item: Subreddit }) => (
-    <TouchableOpacity style={styles.subredditCard}>
-      <Image source={{ uri: item.image }} style={styles.subredditImage} />
-      <View style={styles.subredditInfo}>
-        <Text style={styles.subredditName}>{item.name}</Text>
-        <Text style={styles.subredditMembers}>{item.members} members</Text>
-        <Text style={styles.subredditDescription} numberOfLines={2}>
-          {item.description}
-        </Text>
+  const handleVenuePress = (venue: Venue) => {
+    Alert.alert(
+      venue.name,
+      `Address: ${venue.address}\nRating: ${venue.rating.toFixed(1)}`,
+    );
+  };
+
+  const handlePostPress = (post: Post) => {
+    Alert.alert(
+      post.title,
+      `${post.type === "game" ? "Game" : "News"} post by ${post.author}\n${post.time}`,
+    );
+  };
+
+  const handleCommentPress = (post: Post) => {
+    Alert.alert("Comments", `${post.comments} comments for this post`);
+  };
+
+  const renderVenue = ({ item }: { item: Venue }) => (
+    <TouchableOpacity
+      style={styles.venueCard}
+      onPress={() => handleVenuePress(item)}
+    >
+      <View style={styles.venueInfo}>
+        <Text style={styles.venueName}>{item.name}</Text>
+        <Text style={styles.venueAddress}>{item.address}</Text>
+        <View style={styles.ratingContainer}>
+          <Ionicons name="star" size={16} color="#FFD700" />
+          <Text style={styles.venueRating}>{item.rating.toFixed(1)}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
 
   const renderPost = ({ item }: { item: Post }) => (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => handlePostPress(item)}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardSubreddit}>r/{item.subreddit}</Text>
+        <Text
+          style={[
+            styles.cardType,
+            item.type === "game" ? styles.gameType : styles.newsType,
+          ]}
+        >
+          {item.type === "game" ? "Game" : "News"}
+        </Text>
         <Text style={styles.cardTitle}>{item.title}</Text>
         <Text style={styles.cardMeta}>
           Posted by {item.author} • {item.time}
         </Text>
+        {item.venue && <Text style={styles.cardVenue}>at {item.venue}</Text>}
       </View>
       <View style={styles.cardActions}>
         <View style={styles.voteContainer}>
@@ -172,45 +176,41 @@ export default function HomeScreen() {
             <Ionicons name="chevron-down" size={24} color="#A1A1AA" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.commentButton}>
+        <TouchableOpacity
+          style={styles.commentButton}
+          onPress={() => handleCommentPress(item)}
+        >
           <Ionicons name="chatbubble-outline" size={20} color="#A1A1AA" />
           <Text style={styles.commentCount}>{item.comments}</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <Header title="Home" />
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search posts..."
-          placeholderTextColor="#A1A1AA"
-          value={searchQuery}
-          onChangeText={handleSearch}
-        />
-      </View>
+      <Header />
       <ScrollView>
-        <View style={styles.subredditsContainer}>
-          <Text style={styles.sectionTitle}>Chicago Parks Subreddits</Text>
+        <View style={styles.venuesContainer}>
+          <Text style={styles.sectionTitle}>Popular Venues</Text>
           <FlatList
-            data={subreddits}
-            renderItem={renderSubreddit}
+            data={venues}
+            renderItem={renderVenue}
             keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
           />
         </View>
-        <FlatList
-          data={posts}
-          renderItem={renderPost}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
-          scrollEnabled={false}
-        />
+        <View style={styles.postsContainer}>
+          <Text style={styles.sectionTitle}>Games & News</Text>
+          <FlatList
+            data={posts}
+            renderItem={renderPost}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -221,79 +221,89 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#18181B",
   },
-  searchContainer: {
-    padding: 10,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 15,
     backgroundColor: "#27272A",
   },
-  searchInput: {
-    backgroundColor: "#3F3F46",
-    color: "#FFFFFF",
-    padding: 10,
-    borderRadius: 8,
-    fontSize: 16,
+  logo: {
+    height: 40,
+    width: 150,
   },
-  subredditsContainer: {
+  profileButton: {
+    padding: 5,
+  },
+  venuesContainer: {
     marginTop: 10,
     paddingHorizontal: 10,
   },
+  postsContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#FFFFFF",
     marginBottom: 10,
   },
-  subredditCard: {
-    flexDirection: "row",
+  venueCard: {
     backgroundColor: "#27272A",
     borderRadius: 8,
     padding: 10,
     marginRight: 10,
-    width: 300,
+    width: 200,
   },
-  subredditImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
-  },
-  subredditInfo: {
+  venueInfo: {
     flex: 1,
   },
-  subredditName: {
+  venueName: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#FFFFFF",
   },
-  subredditMembers: {
+  venueAddress: {
     fontSize: 12,
     color: "#A1A1AA",
+    marginTop: 4,
   },
-  subredditDescription: {
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  venueRating: {
     fontSize: 14,
-    marginTop: 5,
     color: "#FFFFFF",
-  },
-  listContainer: {
-    padding: 10,
+    marginLeft: 4,
   },
   card: {
     backgroundColor: "#27272A",
     borderRadius: 8,
     marginBottom: 10,
     padding: 15,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
   cardHeader: {
     marginBottom: 10,
   },
-  cardSubreddit: {
-    fontSize: 14,
-    color: "#60A5FA",
+  cardType: {
+    fontSize: 12,
+    fontWeight: "bold",
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    borderRadius: 4,
+    alignSelf: "flex-start",
     marginBottom: 5,
+  },
+  gameType: {
+    backgroundColor: "#4CAF50",
+    color: "#FFFFFF",
+  },
+  newsType: {
+    backgroundColor: "#2196F3",
+    color: "#FFFFFF",
   },
   cardTitle: {
     fontSize: 16,
@@ -305,10 +315,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#A1A1AA",
   },
+  cardVenue: {
+    fontSize: 12,
+    color: "#60A5FA",
+    marginTop: 5,
+  },
   cardActions: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginTop: 10,
   },
   voteContainer: {
     flexDirection: "row",

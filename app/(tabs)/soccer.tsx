@@ -1,90 +1,79 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  RefreshControl,
-} from "react-native";
+import React from "react";
+import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-
-// Placeholder data (replace with real API data later)
-const newsItems = [
-  { id: 1, title: "Manchester United secures dramatic win", time: "2h ago" },
-  { id: 2, title: "Transfer rumors: Mbappe to Real Madrid?", time: "4h ago" },
-  { id: 3, title: "Champions League draw announced", time: "6h ago" },
-];
-
-const scores = [
-  { id: 1, home: "Liverpool", away: "Chelsea", score: "2 - 1" },
-  { id: 2, home: "Barcelona", away: "Real Madrid", score: "0 - 0" },
-  { id: 3, home: "Bayern Munich", away: "Dortmund", score: "3 - 2" },
-];
-
-const schedules = [
-  { id: 1, home: "Arsenal", away: "Tottenham", time: "Sat, 15:00" },
-  { id: 2, home: "PSG", away: "Lyon", time: "Sun, 20:00" },
-  { id: 3, home: "Juventus", away: "AC Milan", time: "Mon, 19:45" },
-];
+import Header from "../../components/Header";
 
 export default function SoccerScreen() {
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    // Fetch new data here
-    setTimeout(() => setRefreshing(false), 2000);
-  }, []);
-
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor="#FF6B35"
-          />
-        }
-      >
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Latest News</Text>
-          {newsItems.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.card}>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Text style={styles.cardSubtitle}>{item.time}</Text>
-            </TouchableOpacity>
-          ))}
+          <Text style={styles.title}>Latest News</Text>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>
+              New transfer rumors for top league
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>
+              Upcoming international friendlies announced
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>
+              Star player returns from injury
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>
+              New coach appointed for national team
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>
+              Youth academy produces promising talent
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Scores</Text>
-          {scores.map((item) => (
-            <View key={item.id} style={styles.card}>
-              <View style={styles.scoreRow}>
-                <Text style={styles.teamName}>{item.home}</Text>
-                <Text style={styles.score}>{item.score}</Text>
-                <Text style={styles.teamName}>{item.away}</Text>
-              </View>
-            </View>
-          ))}
+          <Text style={styles.title}>Recent Scores</Text>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team A 2 - 1 Team B</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team C 0 - 0 Team D</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team E 3 - 2 Team F</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team G 1 - 1 Team H</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team I 4 - 0 Team J</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Upcoming Matches</Text>
-          {schedules.map((item) => (
-            <View key={item.id} style={styles.card}>
-              <Text style={styles.cardTitle}>
-                {item.home} vs {item.away}
-              </Text>
-              <Text style={styles.cardSubtitle}>
-                <FontAwesome name="clock-o" size={14} color="#A1A1AA" />{" "}
-                {item.time}
-              </Text>
-            </View>
-          ))}
+          <Text style={styles.title}>Upcoming Matches</Text>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team K vs Team L - June 15</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team M vs Team N - June 18</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team O vs Team P - June 20</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team Q vs Team R - June 22</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Team S vs Team T - June 25</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -94,47 +83,30 @@ export default function SoccerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#18181B",
+    backgroundColor: "#27272A",
+  },
+  scrollViewContent: {
+    padding: 20,
   },
   section: {
-    padding: 16,
+    marginBottom: 20,
   },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-    marginBottom: 16,
-  },
-  card: {
-    backgroundColor: "#27272A",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#FFFFFF",
-    marginBottom: 4,
-  },
-  cardSubtitle: {
-    fontSize: 14,
-    color: "#A1A1AA",
-  },
-  scoreRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  teamName: {
-    flex: 1,
-    fontSize: 16,
-    color: "#FFFFFF",
-  },
-  score: {
-    fontSize: 18,
+  title: {
+    fontSize: 20,
     fontWeight: "bold",
     color: "#FF6B35",
-    marginHorizontal: 8,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: "#3F3F46",
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

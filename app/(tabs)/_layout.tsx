@@ -14,7 +14,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#FF6B35",
+        tabBarActiveTintColor: "#4CAF50", // Soccer field green color
         headerShown: false,
       }}
     >
@@ -28,9 +28,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="soccer"
         options={{
-          title: "Soccer",
+          title: "Soccer News",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="futbol-o" color={color} />
+            <TabBarIcon name="newspaper-o" color={color} />
           ),
         }}
       />
